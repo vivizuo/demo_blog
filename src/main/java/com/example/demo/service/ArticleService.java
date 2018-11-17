@@ -40,7 +40,36 @@ public class ArticleService {
         return articles;
     }
 
-    public Article queryById(Long id) {
-        return new Article();
+    public Article queryById(Long id) throws SQLException {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement("SELECT * from article where id=?");
+        ps.setLong(1,id);
+        ResultSet rs = ps.executeQuery();
+        //next函数触发游标读rs的数据
+        rs.next();
+        String title = rs.getString("title");
+        String content = rs.getString("content");
+        String author = rs.getString("author");
+        Article article = new Article();
+        article.setTitle(title);
+        article.setContent(content);
+        article.setAuthor(author);
+        return article;
     }
+    public void deleteArticle(long id) throws SQLException{
+        Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement("DELETE from article where id=?");
+        ps.setLong(1,id);
+        // executeUpdate(sql)的返回值是更新的条数
+        int a = ps.executeUpdate();
+        if (a == 0)
+        {
+            System.out.println("here has no data to delete");
+        }
+        else{
+            System.out.println("you are delete "+a+"datas");
+        }
+    }
+
+
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,14 +66,32 @@ public class ArticleController {
         }
     }
 
+
+
     @RequestMapping("/byId")
     //通过id查询文章
-    public Response<Article> article(Long id) {
-        return Response.success(articleService.queryById(id));
+    public Response<Article> queryById(Long id) {
+        try {
+            return Response.success(articleService.queryById(id));
+        }catch (SQLException e){
+            return Response.failed(String.valueOf(e.getErrorCode()), e.getMessage());
+        }
     }
 
-    //@RequestMapping("delete")
+    @RequestMapping("/delete")
     //删除文章
+    public Response delete(Long id){
+        try{
+            articleService.deleteArticle(id);
+            return Response.success();
+        }catch (SQLException e){
+            return Response.failed(String.valueOf(e.getErrorCode()),e.getMessage());
+        }
+
+    }
+
+
+
 
 
 }
