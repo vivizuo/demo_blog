@@ -67,8 +67,26 @@ public class ArticleService {
             System.out.println("here has no data to delete");
         }
         else{
-            System.out.println("you are delete "+a+"datas");
+            System.out.println("you delete "+a+"article");
         }
+    }
+
+    public void updateArticle(Article article) throws SQLException{
+        Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement("update article set title=?,content=?,author=? where id=?");
+        ps.setString(1,article.getTitle());
+        ps.setString(2,article.getContent());
+        ps.setString(3,article.getAuthor());
+        ps.setLong(4,article.getId());
+        int a = ps.executeUpdate();
+        if (a == 0)
+        {
+            System.out.println("NO article was updated");
+        }
+        else{
+            System.out.println("you updated "+a+"article");
+        }
+
     }
 
 

@@ -3,10 +3,9 @@ package com.example.demo.controller;
 import com.example.demo.model.Article;
 import com.example.demo.model.Response;
 import com.example.demo.service.ArticleService;
+import org.apache.ibatis.jdbc.SQL;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -41,7 +40,7 @@ public class ArticleController {
     }
 
 
-    @RequestMapping("/add")
+    @PostMapping("/add")
         //增加文章
     Response add_article(Article article) {
 
@@ -49,10 +48,20 @@ public class ArticleController {
     }
 
 
-    //@RequestMapping("/modify")
+    @PutMapping("/modify")
     //修改文章
+    public Response<Article> modifyArticle(@RequestBody Article article) {
+        try {
+            articleService.updateArticle(article);
+            //返回空
+            return Response.success();
+        } catch (SQLException e) {
+            return Response.failed(String.valueOf(e.getErrorCode()), e.getMessage());
+        }
+    }
 
-    @RequestMapping("/query")
+
+    @GetMapping("/query")
     //查询文章
     public Response<List<Article>> query(@RequestParam(required = false) String query) {
 
@@ -67,31 +76,28 @@ public class ArticleController {
     }
 
 
-
-    @RequestMapping("/byId")
+    @GetMapping("/byId")
     //通过id查询文章
     public Response<Article> queryById(Long id) {
         try {
             return Response.success(articleService.queryById(id));
-        }catch (SQLException e){
+        } catch (SQLException e) {
             return Response.failed(String.valueOf(e.getErrorCode()), e.getMessage());
         }
     }
 
-    @RequestMapping("/delete")
+    @GetMapping("/delete")
     //删除文章
-    public Response delete(Long id){
-        try{
+    public Response delete(Long id) {
+        try {
             articleService.deleteArticle(id);
+            //返回空
             return Response.success();
-        }catch (SQLException e){
-            return Response.failed(String.valueOf(e.getErrorCode()),e.getMessage());
+        } catch (SQLException e) {
+            return Response.failed(String.valueOf(e.getErrorCode()), e.getMessage());
         }
 
     }
-
-
-
 
 
 }

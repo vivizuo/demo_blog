@@ -19,8 +19,8 @@ public class Response<T> {
         return new Response<>(data);
     }
 
-    public static Response success() {
-        return new Response();
+    public static <T> Response<T> success() {
+        return new Response<>();
     }
 
     public static <T> Response<T> failed(String subCode, String subMsg) {
